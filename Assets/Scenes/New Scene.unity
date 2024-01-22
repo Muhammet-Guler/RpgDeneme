@@ -441,7 +441,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e548fba06af02240b432835700b7c15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Cube: {fileID: 5410898976904523283, guid: 7675924c9ede4a24ab3e8b19783b0674, type: 3}
+  Cube: {fileID: 5410898976904523283, guid: 65c22bde577aeff4994696841615c15e, type: 3}
+  InstantieCube: {fileID: 0}
+  Panel: {fileID: 0}
 --- !u!114 &863048491
 MonoBehaviour:
   m_ObjectHideFlags: 0

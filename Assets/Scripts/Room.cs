@@ -22,12 +22,12 @@ public class Room : MonoBehaviourPunCallbacks
         {
             if (PhotonNetwork.PlayerList.Length == 1)
             {
-                InstantieCube= PhotonNetwork.Instantiate(Cube.name,new Vector3((float)-4.26,(float)80.43,5), Quaternion.identity);
+                InstantieCube= PhotonNetwork.Instantiate(Cube.name,new Vector3((float)-4.26,(float)67.5,5), Quaternion.identity);
                 PhotonNetwork.PlayerList[0].NickName = "aaa";
             }
             if (PhotonNetwork.PlayerList.Length == 2)
             {
-                InstantieCube = PhotonNetwork.Instantiate(Cube.name, new Vector3((float)4.26, (float)80.43, 5), Quaternion.identity);
+                InstantieCube = PhotonNetwork.Instantiate(Cube.name, new Vector3((float)4.26, (float)67.5, 5), Quaternion.identity);
                 PhotonNetwork.PlayerList[0].NickName = "bbb";
             }
         }
@@ -46,6 +46,11 @@ public class Room : MonoBehaviourPunCallbacks
         {
             Panel.SetActive(false);
         }
+    }
+    [PunRPC]
+    void ChangeCubeColorRPC(Color newColor)
+    {
+        InstantieCube.GetComponent<Renderer>().material.color = newColor;
     }
     public override void OnConnectedToMaster()
     {
@@ -100,4 +105,5 @@ public class Room : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.LoadLevel("SampleScene");
     }
+
 }
