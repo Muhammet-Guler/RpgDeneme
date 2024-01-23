@@ -30,6 +30,11 @@ public class Room : MonoBehaviourPunCallbacks
                 InstantieCube = PhotonNetwork.Instantiate(Cube.name, new Vector3((float)4.26, (float)67.5, 5), Quaternion.identity);
                 PhotonNetwork.PlayerList[0].NickName = "bbb";
             }
+            if (PhotonNetwork.PlayerList.Length==3)
+            {
+                InstantieCube = PhotonNetwork.Instantiate(Cube.name, new Vector3((float)0.26, (float)67.5, 5), Quaternion.identity);
+                PhotonNetwork.PlayerList[0].NickName = "ccc";
+            }
         }
 
 
@@ -40,7 +45,7 @@ public class Room : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.PlayerList.Length == 1)
         {
-            Panel.SetActive(true);
+            //Panel.SetActive(true);
         }
         if (PhotonNetwork.PlayerList.Length == 2)
         {
@@ -91,7 +96,7 @@ public class Room : MonoBehaviourPunCallbacks
 
         RoomOptions roomOptions = new RoomOptions()
         {
-            MaxPlayers = 2
+            MaxPlayers = 3
 
         };
 

@@ -23,8 +23,10 @@ public class Cube : MonoBehaviourPunCallbacks,IPunObservable
     private float destroyDelay = 2f;
     private float destroyTimer2 = 0f;
     private float destroyDelay2 = 2f;
+
     // Start is called before the first frame update
     void Start()
+        
     {
         room = GameObject.Find("Photon").GetComponent<Room>();
     }
