@@ -46,6 +46,22 @@ MonoBehaviour:
   - ChangeShieldColorRPC
   - ChangeSpellColorRPC
   - UpdateList
+  - TakeHealth
+  - addList
+  - SyncListInit
+  - SyncListUpdate
+  - teamList
+  - SyncList
+  - RPC_AddPlayerObject
+  - AddRandomNumberToListRPC
+  - AddToTeamAListRPC
+  - AddToTeamBListRPC
+  - teamATotalHealth
+  - teamBTotalHealth
+  - totalA
+  - InitializeTeamA
+  - InitializeTeamB
+  - totalB
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

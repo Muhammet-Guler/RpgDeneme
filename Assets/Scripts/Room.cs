@@ -13,7 +13,6 @@ public class Room : MonoBehaviourPunCallbacks
     public GameObject Cube;
     public GameObject InstantieCube;
     public GameObject Panel;
-
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
