@@ -16,10 +16,12 @@ public class Cube : MonoBehaviourPunCallbacks, IPunObservable
     public UnityEngine.UI.Text healthText;
     public int playerID;
     public GameObject spell;
+    public GameObject spell2;
     public GameObject shield;
     private Room room;
     public float hiz = 10.0f;
-    public GameObject spellInstantie;
+    public GameObject spellInstantieA;
+    public GameObject spellInstantieB;
     public GameObject shieldInstantie;
     private float destroyTimer = 0f;
     private float destroyDelay = 2f;
@@ -29,36 +31,41 @@ public class Cube : MonoBehaviourPunCallbacks, IPunObservable
     public List<int> teamB = new List<int>();
     public UnityEngine.UI.Text TeamAHealthText;
     public UnityEngine.UI.Text TeamBHealthText;
-    public int teamAHealthTotal;
-    public int teamBHealthTotal;
-    public string team;
-
+    public int teamAHealthTotal=0;
+    public int teamBHealthTotal=0;
+    public string teamType;
 
     // Start is called before the first frame update
     void Start()
 
     {
-        room = GameObject.Find("Photon").GetComponent<Room>();
         TeamAHealthText = GameObject.Find("TeamA").GetComponent<UnityEngine.UI.Text>();
         TeamBHealthText = GameObject.Find("TeamB").GetComponent<UnityEngine.UI.Text>();
-        
-        if (PhotonNetwork.PlayerList.Length == 1)
-        {
-            photonView.RPC("InitializeTeamA", RpcTarget.AllBuffered, health);
-
-        }
-        if (PhotonNetwork.PlayerList.Length == 2)
-        {
-            photonView.RPC("InitializeTeamA", RpcTarget.AllBuffered, health);
-
-        }
-        if (PhotonNetwork.PlayerList.Length == 3)
-        {
-            photonView.RPC("InitializeTeamB", RpcTarget.AllBuffered, health);
-        }
+        room = GameObject.Find("Photon").GetComponent<Room>();
+            if (PhotonNetwork.PlayerList.Length==1)
+            {
+                photonView.RPC("AddToTeamAListRPC", RpcTarget.AllBuffered, health);
+                teamType = "A";
+            }
+            if (PhotonNetwork.PlayerList.Length == 2)
+            {
+                photonView.RPC("AddToTeamAListRPC", RpcTarget.AllBuffered, health);
+                teamType = "A";
+            }
+            else if(PhotonNetwork.PlayerList.Length == 3)
+            {
+            if (PhotonNetwork.PlayerList[2]==PhotonNetwork.LocalPlayer)
+                {
+                photonView.RPC("AddToTeamBListRPC", RpcTarget.AllBuffered, health);
+                teamType = "B";
+                }
+            }
     }
     void Update()
     {
+
+        TeamAHealthText = GameObject.Find("TeamA").GetComponent<UnityEngine.UI.Text>();
+        TeamBHealthText = GameObject.Find("TeamB").GetComponent<UnityEngine.UI.Text>();
 
         if (photonView.IsMine)
         {
@@ -84,27 +91,47 @@ public class Cube : MonoBehaviourPunCallbacks, IPunObservable
             {
                 transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - (float)(0.5));
             }
-            if (Input.GetKeyDown(KeyCode.Mouse0) && spellInstantie == null)
+            if (teamType == "A")
             {
-                // Yeni bir spellInstantie olu?tur ve konumunu ayarla
-                spellInstantie = PhotonNetwork.Instantiate(spell.name, room.Cube.transform.position, Quaternion.identity);
-                spellInstantie.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 1);
-                destroyTimer = 0f;
-            }
 
-            // E?er spellInstantie varsa, ilerlet ve 2 saniye sonra yok etme
-            if (spellInstantie != null)
-            {
-                spellInstantie.transform.Translate(Vector3.forward * hiz * Time.deltaTime);
-                destroyTimer += Time.deltaTime;
-
-                // E?er belirlenen süre geçtiyse, yok et
-                if (destroyTimer >= destroyDelay)
+                if (Input.GetKeyDown(KeyCode.Mouse0) && spellInstantieA == null)
                 {
-                    PhotonNetwork.Destroy(spellInstantie);
-                    spellInstantie = null;
+                    spellInstantieA = PhotonNetwork.Instantiate(spell.name, room.Cube.transform.position, Quaternion.identity);
+                    spellInstantieA.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 1);
+                    destroyTimer = 0f;
                 }
-                //Destroy(spellInstantie, 2f);
+
+                if (spellInstantieA != null)
+                {
+                    spellInstantieA.transform.Translate(Vector3.forward * hiz * Time.deltaTime);
+                    destroyTimer += Time.deltaTime;
+                    if (destroyTimer >= destroyDelay)
+                    {
+                        PhotonNetwork.Destroy(spellInstantieA);
+                        spellInstantieA = null;
+                    }
+                }
+            }
+            if (teamType == "B")
+            {
+
+                if (Input.GetKeyDown(KeyCode.Mouse0) && spellInstantieB == null)
+                {
+                    spellInstantieB = PhotonNetwork.Instantiate(spell2.name, room.Cube.transform.position, Quaternion.identity);
+                    spellInstantieB.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 1);
+                    destroyTimer = 0f;
+                }
+
+                if (spellInstantieB != null)
+                {
+                    spellInstantieB.transform.Translate(Vector3.forward * hiz * Time.deltaTime);
+                    destroyTimer += Time.deltaTime;
+                    if (destroyTimer >= destroyDelay)
+                    {
+                        PhotonNetwork.Destroy(spellInstantieB);
+                        spellInstantieB = null;
+                    }
+                }
             }
             if (Input.GetKeyDown(KeyCode.Mouse1))
             {
@@ -126,32 +153,18 @@ public class Cube : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
     [PunRPC]
-    void InitializeTeamA(int startingHealth)
-    {
-        team = "A";
-        health = startingHealth;
-        teamAHealthTotal = 200;
-        TeamAHealthText.text= teamAHealthTotal.ToString();
-        photonView.RPC("AddToTeamAListRPC", RpcTarget.AllBuffered, health);
-    }
-    [PunRPC]
-    void InitializeTeamB(int startingHealth)
-    {
-        team = "B";
-        health = startingHealth;
-        teamBHealthTotal = 100;
-        TeamBHealthText.text = teamBHealthTotal.ToString();
-        photonView.RPC("AddToTeamBListRPC", RpcTarget.AllBuffered, health);
-    }
-    [PunRPC]
     void AddToTeamAListRPC(int health)
     {
         teamA.Add(health);
+        teamAHealthTotal += health;
+        //TeamAHealthText.text = teamAHealthTotal.ToString();
     }
     [PunRPC]
     void AddToTeamBListRPC(int health)
     {
         teamB.Add(health);
+        teamBHealthTotal = health;
+        //TeamBHealthText.text = teamBHealthTotal.ToString();
     }
 
     [PunRPC]
@@ -166,13 +179,22 @@ public class Cube : MonoBehaviourPunCallbacks, IPunObservable
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "spell")
+        if (other.gameObject.tag == "spell2" && teamType == "A")
         {
-            PhotonNetwork.Destroy(spellInstantie);
-            spellInstantie = null;
+            PhotonNetwork.Destroy(spellInstantieA);
+            spellInstantieA = null;
             if (photonView.IsMine)
             {
                 photonView.RPC("TakeDamage", RpcTarget.All, 10);
+            }
+        }
+        if (other.gameObject.tag == "spell"&& teamType == "B")
+        {
+            PhotonNetwork.Destroy(spellInstantieB);
+            spellInstantieB = null;
+            if (photonView.IsMine)
+            {
+                photonView.RPC("TakeDamage2", RpcTarget.All, 10);
             }
         }
     }
@@ -180,30 +202,36 @@ public class Cube : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void TakeDamage(int damage)
     {
-        //health -= damage;
-        //if (health <= 0)
-        //{
-        //    health = 0;
-        //}
-        if (team == "A")
+        health -= damage;
+        if (health <= 0)
         {
-            teamAHealthTotal -= damage;
-            if (teamAHealthTotal <= 0)
-            {
-                teamAHealthTotal = 0;
-            }
-            photonView.RPC("totalA", RpcTarget.AllBuffered, teamAHealthTotal);
+            health = 0;
+            Destroy(gameObject);
         }
-        if (team == "B")
+        teamAHealthTotal -= damage;
+        if (teamAHealthTotal <= 0)
         {
-
-            teamBHealthTotal -= damage;
-            if (teamBHealthTotal <= 0)
-            {
-                teamBHealthTotal = 0;
-            }
-            photonView.RPC("totalB", RpcTarget.AllBuffered, teamBHealthTotal);
+           teamAHealthTotal = 0;
         }
+        photonView.RPC("totalA", RpcTarget.AllBuffered, teamAHealthTotal);
+        TeamAHealthText.text = teamAHealthTotal.ToString();
+    }
+    [PunRPC]
+    public void TakeDamage2(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            health = 0;
+            Destroy(gameObject);
+        }
+        teamBHealthTotal -= damage;
+        if (teamBHealthTotal <= 0)
+        {
+            teamBHealthTotal = 0;
+        }
+        photonView.RPC("totalB", RpcTarget.AllBuffered, teamBHealthTotal);
+        TeamBHealthText.text = teamBHealthTotal.ToString();
     }
     [PunRPC]
     void totalA(int teamATotal)
@@ -220,12 +248,24 @@ public class Cube : MonoBehaviourPunCallbacks, IPunObservable
     private void FixedUpdate()
     {
         healthText.text = health.ToString();
-        Debug.Log(teamA.Count);
-        teamAHealthTotal = int.Parse(TeamAHealthText.text);
-        teamBHealthTotal = int.Parse(TeamBHealthText.text);
-        //TeamAHealthText.text = teamAHealthTotal.ToString();
-        //photonView.RPC("totalA", RpcTarget.AllBuffered, teamAHealthTotal);
-        //Debug.Log(teamAHealthTotal);
+        //Debug.Log("teamA"+teamA.Count); 
+        if (TeamAHealthText.text!="TeamAHealtMaximum")
+        {
+            teamAHealthTotal = int.Parse(TeamAHealthText.text);
+            if (int.Parse(TeamAHealthText.text)==0)
+            {
+                room.gameover.SetActive(true);
+            }
+
+        }
+        if (TeamBHealthText.text != "TeamBHealtMaximum")
+        {
+            teamBHealthTotal = int.Parse(TeamBHealthText.text); 
+            if (int.Parse(TeamBHealthText.text) == 0)
+            {
+                room.gameover.SetActive(false);
+            }
+        }
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -235,14 +275,18 @@ public class Cube : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (stream.IsWriting)
         {
-            //stream.SendNext(health);
-            //stream.SendNext(teamAHealthTotal);
+            stream.SendNext(health);
+            stream.SendNext(teamType);
+            stream.SendNext(teamAHealthTotal);
+            stream.SendNext(teamBHealthTotal);
             //Debug.Log("gitii");
         }
         else if (stream.IsReading)
         {
-            //health = (int)stream.ReceiveNext();
-            //teamAHealthTotal = (int)stream.ReceiveNext();
+            health = (int)stream.ReceiveNext();
+            teamType= (string)stream.ReceiveNext();
+            teamAHealthTotal = (int)stream.ReceiveNext();
+            teamBHealthTotal = (int)stream.ReceiveNext();
             //Debug.Log("geldi");
 
         }

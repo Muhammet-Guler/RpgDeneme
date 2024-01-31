@@ -22,8 +22,14 @@ public class Shield : MonoBehaviourPunCallbacks
         if (other.tag=="spell")
         {
             PhotonNetwork.Destroy(other.gameObject);
-            cube.spellInstantie = null;
+            cube.spellInstantieA = null;
             
+        }
+        if (other.tag == "spell2")
+        {
+            PhotonNetwork.Destroy(other.gameObject);
+            cube.spellInstantieB = null;
+
         }
     }
 }

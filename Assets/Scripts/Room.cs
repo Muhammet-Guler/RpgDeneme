@@ -13,6 +13,7 @@ public class Room : MonoBehaviourPunCallbacks
     public GameObject Cube;
     public GameObject InstantieCube;
     public GameObject Panel;
+    public GameObject gameover;
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
@@ -42,11 +43,11 @@ public class Room : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        if (PhotonNetwork.PlayerList.Length == 1)
+        if (PhotonNetwork.PlayerList.Length == 1||PhotonNetwork.PlayerList.Length==2)
         {
-            //Panel.SetActive(true);
+            Panel.SetActive(true);
         }
-        if (PhotonNetwork.PlayerList.Length == 2)
+        if (PhotonNetwork.PlayerList.Length == 3)
         {
             Panel.SetActive(false);
         }

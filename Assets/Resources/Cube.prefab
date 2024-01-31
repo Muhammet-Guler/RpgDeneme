@@ -123,6 +123,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: -8862281124181098396}
   - {fileID: -5469742094274545659}
+  - {fileID: 0}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -151,9 +152,11 @@ MonoBehaviour:
   healthText: {fileID: 670739898116202730}
   playerID: 0
   spell: {fileID: 5742812661376232887, guid: 02d8868675fdbba4eba67cd304770cac, type: 3}
+  spell2: {fileID: 5742812661376232887, guid: 7ecdcf825102bd84288edcff86273eb2, type: 3}
   shield: {fileID: 309557502815934517, guid: d7535b2209779ca40b7ae0b1b6d41e64, type: 3}
   hiz: 10
-  spellInstantie: {fileID: 0}
+  spellInstantieA: {fileID: 0}
+  spellInstantieB: {fileID: 0}
   shieldInstantie: {fileID: 0}
   teamA: 
   teamB: 
@@ -161,7 +164,7 @@ MonoBehaviour:
   TeamBHealthText: {fileID: 0}
   teamAHealthTotal: 0
   teamBHealthTotal: 0
-  team: 
+  teamType: 
 --- !u!114 &-5469742094274545659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,7 +179,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
+  m_SynchronizeScale: 1
   m_UseLocal: 1
 --- !u!54 &8374690081239667360
 Rigidbody:
