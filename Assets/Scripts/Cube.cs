@@ -263,7 +263,7 @@ public class Cube : MonoBehaviourPunCallbacks, IPunObservable
             teamBHealthTotal = int.Parse(TeamBHealthText.text); 
             if (int.Parse(TeamBHealthText.text) == 0)
             {
-                room.gameover.SetActive(false);
+                room.gameover.SetActive(true);
             }
         }
     }
